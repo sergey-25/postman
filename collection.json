@@ -1,0 +1,74 @@
+{
+  "info": {
+    "_postman_id": "07a00976-ec5d-49ad-a9ef-c1c558ef92cc",
+    "name": "BBC_01",
+    "description": "For testing data in eHEalth PreProd",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "15381251"
+  },
+  "item": [
+    {
+      "name": "Person & Preperson",
+      "item": [
+        {
+          "name": "Approve Person Request",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "type": "text",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "api-key",
+                "type": "text",
+                "value": "{{mis_client_secret}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"verification_code\": 3793\r\n}"
+            },
+            "url": {
+              "raw": "{{host}}/api/person_requests/4fe0b91e-2d72-4f80-853f-381bd0ff27c6/actions/approve",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "api",
+                "person_requests",
+                "4fe0b91e-2d72-4f80-853f-381bd0ff27c6",
+                "actions",
+                "approve"
+              ],
+              "query": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "disabled": true
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}",
+                  "disabled": true
+                },
+                {
+                  "key": "api-key",
+                  "value": "{{mis_client_secret}}",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [{
+            "verification_code": 3793
+          }]
+        }
+      ]
+    }]}
