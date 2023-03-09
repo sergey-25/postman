@@ -10,8 +10,8 @@ const express = require('express'),
     bodyParser = require('body-parser'),
     DEFAULT_MODE = 'writeFile',
     path = require('path');
-const router = express.Router();
-const serverless = require('serverless-http');
+// const router = express.Router();
+// const serverless = require('serverless-http');
 
 
 // Create the folder path in case it doesn't exist
@@ -42,9 +42,9 @@ const setNewData = (newArr) => {
 }
 
 
-router.get('/', (req, res) => res.send('Hello, I write data to file. Send them requests!'));
+app.get('/', (req, res) => res.send('Hello, I write data to file. Send them requests!'));
 
-router.post('/parson-list', (req, res) => {
+app.post('/parson-list', (req, res) => {
 
     try {
         const normalizeJson = req.body.responseData;
@@ -95,7 +95,7 @@ router.post('/parson-list', (req, res) => {
 
 
 
-router.post('/write', (req, res) => {
+app.post('/write', (req, res) => {
     try {
         console.log(req.body)
         const normalizeJson = JSON.parse(req.body.responseData);
@@ -125,10 +125,10 @@ router.post('/write', (req, res) => {
 });
 
 
-// app.listen(3000, () => {
-//     console.log('ResponsesToFile App is listening now! Send them requests my way!');
-//     console.log(`Data is being stored at location: ${path.join(process.cwd(), folderPath)}`);
-// });
-app.use('/.netlify/functions/api', router);
-module.exports.handler = serverless(app);
+app.listen(3000, () => {
+    console.log('ResponsesToFile App is listening now! Send them requests my way!');
+    console.log(`Data is being stored at location: ${path.join(process.cwd(), folderPath)}`);
+});
 
+// app.use('/.netlify/functions/api', router);
+// module.exports.handler = serverless(app);
