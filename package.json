@@ -2,11 +2,9 @@
   "name": "postman",
   "version": "1.0.0",
   "description": "",
-  "main": "./functions/writeToFile.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "fetch": "node ./functions/writeToFile.js",
-    "build": "netlify deploy --prod"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
