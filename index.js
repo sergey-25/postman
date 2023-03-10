@@ -130,5 +130,4 @@ app.listen(3000, () => {
     console.log(`Data is being stored at location: ${path.join(process.cwd(), folderPath)}`);
 });
 
-// app.use('/.netlify/functions/api', router);
-// module.exports.handler = serverless(app);
+
