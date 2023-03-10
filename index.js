@@ -6,7 +6,7 @@ const express = require('express'),
     shell = require('shelljs'),
 
     // Modify the folder path in which responses need to be stored
-    folderPath = 'C:\\Users\\Service\\Downloads',
+    folderPath = 'C:\Users\Service\Downloads',
     defaultFileExtension = 'json', // Change the default file extension
     bodyParser = require('body-parser'),
     DEFAULT_MODE = 'writeFile',
