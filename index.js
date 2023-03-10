@@ -55,7 +55,8 @@ const setNewData = (newArr) => {
 }
 
 
-app.get('/', (req, res) => res.send('Hello, I write data to file. Send them requests!'));
+app.get('/', (req, res) => res.send(
+   'Hello, I write data to file. Send them requests!', console.log(process.cwd())));
 
 app.post('/parson-list', (req, res) => {
 
