@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express'),
 
     app = express(),
@@ -125,7 +126,7 @@ app.post('/write', (req, res) => {
 });
 
 
-app.listen(3030, () => {
+app.listen(process.env.PORT, () => {
     console.log('ResponsesToFile App is listening now! Send them requests my way!');
     console.log(`Data is being stored at location: ${path.join(process.cwd(), folderPath)}`);
 });
