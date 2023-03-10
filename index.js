@@ -1,4 +1,6 @@
 require('dotenv').config()
+const mongoose = require('mongoose');
+const Post = require('./models/posts');
 const express = require('express'),
 
     app = express(),
@@ -6,7 +8,7 @@ const express = require('express'),
     shell = require('shelljs'),
 
     // Modify the folder path in which responses need to be stored
-    folderPath = 'C:\Users\Service\Downloads',
+    folderPath = process.env.FILES_PATH,
     defaultFileExtension = 'json', // Change the default file extension
     bodyParser = require('body-parser'),
     DEFAULT_MODE = 'writeFile',
@@ -34,7 +36,16 @@ let arr = [{
     last_name: 'Поттер'
 }
 ];
-
+const obj = {
+    id: '91e01f46-6c69-4699-81c5-ab23e9b65fa4',
+    inserted_at: '2023-03-03T13:11:51.830633Z',
+    person_id: '172aa0a5-1dc4-4ca9-b0a5-c5b6ee251c49',
+    status: 'SIGNED',
+    updated_at: '2023-03-03T13:13:07.406794Z',
+    birth_date: '1987-11-25',
+    first_name: 'Гаррі',
+    last_name: 'Поттер'
+}
 
 const setNewData = (newArr) => {
     arr = [...newArr]
@@ -49,10 +60,17 @@ app.get('/', (req, res) => res.send('Hello, I write data to file. Send them requ
 app.post('/parson-list', (req, res) => {
 
     try {
+
+        const {first_name, last_name, person_id, birth_date, status} = req.body.responseData;
+        const post = new Post({first_name, last_name, person_id, birth_date, status})
+        post.save().then(r => res.send(r)).catch((err) => {
+            console.log(err)
+        });
+
         const normalizeJson = req.body.responseData;
         console.log(req.body)
         let personInfo = {
-            id: normalizeJson.id,
+            id_req: normalizeJson.id,
             birth_date: normalizeJson.birth_date,
             first_name: normalizeJson.first_name,
             last_name: normalizeJson.last_name,
@@ -96,7 +114,6 @@ app.post('/parson-list', (req, res) => {
 });
 
 
-
 app.post('/write', (req, res) => {
     try {
         console.log(req.body)
@@ -108,7 +125,7 @@ app.post('/write', (req, res) => {
             fsMode = req.body.mode || DEFAULT_MODE,
             uniqueIdentifier = req.body.uniqueIdentifier ? typeof req.body.uniqueIdentifier === 'boolean' ? Date.now() : req.body.uniqueIdentifier : false,
             filename = `Person_${normalizeJson.data.person.first_name}_${normalizeJson.data.person.last_name}`
-            filePath = `${path.join(folderPath, filename)}.${extension}`,
+        filePath = `${path.join(folderPath, filename)}.${extension}`,
             options = req.body.options || undefined;
 
 
@@ -125,11 +142,22 @@ app.post('/write', (req, res) => {
     }
 
 });
+const uri = 'mongodb+srv://sergey25111988:cHfELuTQhrTVclDE@datapersons.pxcehcb.mongodb.net/dataPersons?retryWrites=true&w=majority'
 
+async function connectToDb() {
+    try {
+        await mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+        console.log('Success connect to DB')
+    } catch (error) {
+        console.error(error);
+    }
+}
+connectToDb();
 
 app.listen(process.env.PORT, () => {
     console.log('ResponsesToFile App is listening now! Send them requests my way!');
     console.log(`Data is being stored at location: ${path.join(process.cwd(), folderPath)}`);
+   console.log(folderPath)
 });
 
 
