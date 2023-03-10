@@ -125,7 +125,7 @@ app.post('/write', (req, res) => {
 });
 
 
-app.listen(process.env.PORT, () => {
+app.listen(3030, () => {
     console.log('ResponsesToFile App is listening now! Send them requests my way!');
     console.log(`Data is being stored at location: ${path.join(process.cwd(), folderPath)}`);
 });
