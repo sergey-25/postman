@@ -119,16 +119,16 @@ app.post('/parson-list', (req, res) => {
 
 app.post('/write', (req, res) => {
     try {
-        const {data}=req.body.responseData;
-        console.log(data)
-        const postData = new TextFile({data})
-        postData.save().then(r => res.send(r)).catch((err) => {
-            console.log(err)
-        });
-        console.log(req.body)
+
         const normalizeJson = JSON.parse(req.body.responseData);
         const updateObj = {...normalizeJson.data, patient_signed: true}
         const toStrResult = JSON.stringify(updateObj)
+
+        const postData = new TextFile({
+            data: toStrResult
+        })
+        postData.save();
+        // console.log(req.body)
 
         let extension = req.body.fileExtension || defaultFileExtension,
             fsMode = req.body.mode || DEFAULT_MODE,
@@ -139,12 +139,12 @@ app.post('/write', (req, res) => {
 
 
         fs[fsMode](filePath, toStrResult, options, (err) => {
-            if (err) {
-
-                res.send('Error');
-            } else {
-                res.send('Success');
-            }
+            // if (err) {
+            //
+            //     res.send('Error');
+            // } else {
+            //     res.send('Success');
+            // }
         });
     } catch (err) {
         console.log(err)
@@ -161,12 +161,13 @@ async function connectToDb() {
         console.error(error);
     }
 }
+
 connectToDb();
 
 app.listen(process.env.PORT, () => {
     console.log('ResponsesToFile App is listening now! Send them requests my way!');
     console.log(`Data is being stored at location: ${path.join(process.cwd(), folderPath)}`);
-   console.log(folderPath)
+    console.log(folderPath)
 });
 
 
