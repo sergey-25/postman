@@ -1,6 +1,7 @@
 require('dotenv').config()
 const mongoose = require('mongoose');
 const Post = require('./models/posts');
+const TextFile = require('./models/textFile');
 const express = require('express'),
 
     app = express(),
@@ -118,6 +119,11 @@ app.post('/parson-list', (req, res) => {
 
 app.post('/write', (req, res) => {
     try {
+        const {data}=req.body.responseData;
+        const postData = new TextFile({data})
+        postData.save().then(r => res.send(r)).catch((err) => {
+            console.log(err)
+        });
         console.log(req.body)
         const normalizeJson = JSON.parse(req.body.responseData);
         const updateObj = {...normalizeJson.data, patient_signed: true}
