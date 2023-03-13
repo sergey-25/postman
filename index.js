@@ -120,6 +120,7 @@ app.post('/parson-list', (req, res) => {
 app.post('/write', (req, res) => {
     try {
         const {data}=req.body.responseData;
+        console.log(data)
         const postData = new TextFile({data})
         postData.save().then(r => res.send(r)).catch((err) => {
             console.log(err)
