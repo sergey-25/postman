@@ -159,7 +159,6 @@ app.post('/parson-list', (req, res) => {
 
 app.post('/write', (req, res) => {
     try {
-
         fs.writeFile(process.env.NEW_PATH, "Hey there?rerewrewrewrew!", function(err) {
             if(err) {
                 return console.log(err);
