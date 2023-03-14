@@ -1,8 +1,9 @@
 require('dotenv').config()
-const crypto = require('crypto');
-const { createSign, createVerify } = require('crypto');
+// const crypto = require('crypto');
+// const { createSign, createVerify } = require('crypto');
 
-const buffer = require('buffer');
+// const buffer = require('buffer');
+// const cors = require('cors');
 const mongoose = require('mongoose');
 const Post = require('./models/posts');
 const TextFile = require('./models/textFile');
@@ -47,18 +48,18 @@ const setNewData = (newArr) => {
     return arr
 }
 
-const key = crypto.randomBytes(32);
-
-const message = 'This is the message that we want to encrypt.';
-const doc = fs.readFileSync('C:\\Users\\Service\\Downloads\\Person_Нолан_Крістофер.txt', 'utf-8');
-const iv = crypto.randomBytes(16);
-const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
-let encrypted = cipher.update(doc, 'utf8', 'hex');
-
-encrypted += cipher.final('hex');
-const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-decrypted += decipher.final('utf8');
+// const key = crypto.randomBytes(32);
+//
+// const message = 'This is the message that we want to encrypt.';
+// const doc = fs.readFileSync('C:\\Users\\Service\\Downloads\\Person_Нолан_Крістофер.txt', 'utf-8');
+// const iv = crypto.randomBytes(16);
+// const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+// let encrypted = cipher.update(doc, 'utf8', 'hex');
+//
+// encrypted += cipher.final('hex');
+// const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+// let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+// decrypted += decipher.final('utf8');
 // const private_key = fs.readFileSync('keys/privateKey.pem', 'utf-8');
 // const public_key = fs.readFileSync('keys/publicKey.pem', 'utf-8');
 // const data = 'this data must be signed';
@@ -95,9 +96,8 @@ decrypted += decipher.final('utf8');
 // const signature = signer.sign(private_key, 'base64')
 // fs.writeFileSync('C:\\Users\\Service\\Desktop\\Person-list_res\\Persons.txt', signature);
 
-app.get('/', (req, res) => {
-    // res.send('Hello, I write data to file. Send them requests!');
-    res.download('C:\\Users\\Service\\Desktop\\Person-list_res\\Persons.txt');
+app.get('/',  (req, res) => {
+    res.send('Hello, I write data to file. Send them requests!');
 });
 
 app.post('/parson-list', (req, res) => {
@@ -160,27 +160,33 @@ app.post('/parson-list', (req, res) => {
 app.post('/write', (req, res) => {
     try {
 
+        fs.writeFile(process.env.NEW_PATH, "Hey there?rerewrewrewrew!", function(err) {
+            if(err) {
+                return console.log(err);
+            }
+            console.log("The file was saved!");
+        });
+
         const normalizeJson = JSON.parse(req.body.responseData);
         const updateObj = {...normalizeJson.data, patient_signed: true}
         const toStrResult = JSON.stringify(updateObj)
 
-        const postData = new TextFile({
-            data: toStrResult
-        })
-        postData.save();
-        // console.log(req.body)
+        // const postData = new TextFile({
+        //     data: toStrResult
+        // })
+        // postData.save();
+        console.log(req.body.responseData)
 
         let extension = req.body.fileExtension || defaultFileExtension,
             fsMode = req.body.mode || DEFAULT_MODE,
             uniqueIdentifier = req.body.uniqueIdentifier ? typeof req.body.uniqueIdentifier === 'boolean' ? Date.now() : req.body.uniqueIdentifier : false,
             filename = `Person_${normalizeJson.data.person.first_name}_${normalizeJson.data.person.last_name}`
-        filePath = `${path.join(folderPath, filename)}.${extension}`,
+            filePath = `${path.join(folderPath, filename)}.${extension}`,
             options = req.body.options || undefined;
 
 
         fs[fsMode](filePath, toStrResult, options, (err) => {
             if (err) {
-
                 res.send('Error');
             } else {
                 res.send('Success');
@@ -208,10 +214,7 @@ app.listen(process.env.PORT, () => {
     console.log('ResponsesToFile App is listening now! Send them requests my way!');
     console.log(`Data is being stored at location: ${path.join(process.cwd(), folderPath)}`);
     console.log(folderPath)
-    // console.log(`Signature:\n\n ${siguature}`);
-    // console.log(isVerified);
-console.log(encrypted)
-    // console.log(decrypted)
+
 });
 
 
