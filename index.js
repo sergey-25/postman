@@ -1,4 +1,8 @@
 require('dotenv').config()
+const crypto = require('crypto');
+const { createSign, createVerify } = require('crypto');
+
+const buffer = require('buffer');
 const mongoose = require('mongoose');
 const Post = require('./models/posts');
 const TextFile = require('./models/textFile');
@@ -14,9 +18,6 @@ const express = require('express'),
     bodyParser = require('body-parser'),
     DEFAULT_MODE = 'writeFile',
     path = require('path');
-
-// const router = express.Router();
-// const serverless = require('serverless-http');
 
 
 // Create the folder path in case it doesn't exist
@@ -37,16 +38,7 @@ let arr = [{
     last_name: 'Поттер'
 }
 ];
-const obj = {
-    id: '91e01f46-6c69-4699-81c5-ab23e9b65fa4',
-    inserted_at: '2023-03-03T13:11:51.830633Z',
-    person_id: '172aa0a5-1dc4-4ca9-b0a5-c5b6ee251c49',
-    status: 'SIGNED',
-    updated_at: '2023-03-03T13:13:07.406794Z',
-    birth_date: '1987-11-25',
-    first_name: 'Гаррі',
-    last_name: 'Поттер'
-}
+
 
 const setNewData = (newArr) => {
     arr = [...newArr]
@@ -55,9 +47,57 @@ const setNewData = (newArr) => {
     return arr
 }
 
+const key = crypto.randomBytes(32);
+
+const message = 'This is the message that we want to encrypt.';
+const doc = fs.readFileSync('C:\\Users\\Service\\Downloads\\Person_Нолан_Крістофер.txt', 'utf-8');
+const iv = crypto.randomBytes(16);
+const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+let encrypted = cipher.update(doc, 'utf8', 'hex');
+
+encrypted += cipher.final('hex');
+const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+decrypted += decipher.final('utf8');
+// const private_key = fs.readFileSync('keys/privateKey.pem', 'utf-8');
+// const public_key = fs.readFileSync('keys/publicKey.pem', 'utf-8');
+// const data = 'this data must be signed';
+//
+// /// SIGN
+//
+// const signer = createSign('rsa-sha256');
+//
+// signer.update(data);
+//
+// const siguature = signer.sign(private_key, 'hex');
+//
+// console.log(siguature);
+//
+// /// VERIFY
+//
+// const verifier = createVerify('rsa-sha256');
+//
+// verifier.update(data);
+//
+// const isVerified = verifier.verify(public_key, siguature, 'hex');
+//
+// console.log(isVerified);
+
+// // File/Document to be signed
+// const doc = fs.readFileSync('C:\\Users\\Service\\Downloads\\Person_Нолан_Крістофер.txt');
+//
+// // Signing
+// const signer = crypto.createSign('RSA-SHA256');
+// signer.write(doc);
+// signer.end();
+//
+// // Returns the signature in output_format which can be 'binary', 'hex' or 'base64'
+// const signature = signer.sign(private_key, 'base64')
+// fs.writeFileSync('C:\\Users\\Service\\Desktop\\Person-list_res\\Persons.txt', signature);
 
 app.get('/', (req, res) => {
-    res.send('Hello, I write data to file. Send them requests!')
+    // res.send('Hello, I write data to file. Send them requests!');
+    res.download('C:\\Users\\Service\\Desktop\\Person-list_res\\Persons.txt');
 });
 
 app.post('/parson-list', (req, res) => {
@@ -139,12 +179,12 @@ app.post('/write', (req, res) => {
 
 
         fs[fsMode](filePath, toStrResult, options, (err) => {
-            // if (err) {
-            //
-            //     res.send('Error');
-            // } else {
-            //     res.send('Success');
-            // }
+            if (err) {
+
+                res.send('Error');
+            } else {
+                res.send('Success');
+            }
         });
     } catch (err) {
         console.log(err)
@@ -168,6 +208,10 @@ app.listen(process.env.PORT, () => {
     console.log('ResponsesToFile App is listening now! Send them requests my way!');
     console.log(`Data is being stored at location: ${path.join(process.cwd(), folderPath)}`);
     console.log(folderPath)
+    // console.log(`Signature:\n\n ${siguature}`);
+    // console.log(isVerified);
+console.log(encrypted)
+    // console.log(decrypted)
 });
 
 
